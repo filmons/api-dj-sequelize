@@ -1,4 +1,6 @@
+/* eslint-disable prettier/prettier */
 const { Club } = require("../../models");
+const { BadRequestError, NotFoundError } = require("../helpers/errors");
 
 const clubsController = {
   getAllClubs: async () => {
@@ -8,15 +10,35 @@ const clubsController = {
       raw: true,
     });
     return clubs;
-    //return {pulet :"fifi"}; pour voir dans le table clubs car il est vide 
+    // return {pulet :"fifi"}; pour voir dans le table clubs car il est vide 
   },
   getClub: async (name) => {
-    // Your code here
-    return {};
+    const club = await Club.findOne({
+      where: {
+        name
+      },
+      attributes: ["id", "name"]
+    });
+    if (!club) {
+      throw new NotFoundError("Ressource introuvable", "Ce club n'existe pas");
+    }
+
+    return club;
   },
   addClub: async (data) => {
-    // Your code here
-    return {};
+    const {name} = data;
+    const club = await Club.findOne({
+      where: {
+        name
+      }
+    });
+    if (club) {
+      throw new BadRequestError("Ressource existante", "Le club existe déjà");
+    }
+
+    const newClub = await Club.create({name});
+
+    return newClub;
   },
 };
 
