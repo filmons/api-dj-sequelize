@@ -1,9 +1,14 @@
-// const { Club } = require("../models");
+const { Club } = require("../../models");
 
 const clubsController = {
   getAllClubs: async () => {
-    // Your code here
-    return {};
+    const clubs = await Club.findAll({
+      order: [["name", "ASC"]],
+      attributes: ["name"],
+      raw: true,
+    });
+    return clubs;
+    //return {pulet :"fifi"}; pour voir dans le table clubs car il est vide 
   },
   getClub: async (name) => {
     // Your code here
